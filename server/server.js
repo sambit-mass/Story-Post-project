@@ -1,23 +1,38 @@
-const express = require('express');
-const dotenv = require('dotenv');
-const db = require('./config/db'); 
-const userRoutes = require('./routes/user.route');  
-const postRoutes = require('./routes/post.route')
-const cors = require('cors')
- 
+const express = require("express");
+const dotenv = require("dotenv");
+const cors = require("cors");
 
-dotenv.config(); 
+// 🔴 Load env FIRST
+dotenv.config();
+
+// 🔴 Initialize DB AFTER env is loaded
+require("./config/db");
+
+const userRoutes = require("./routes/user.route");
+const postRoutes = require("./routes/post.route");
 
 const app = express();
-app.use(cors())
+
+// ✅ CORS config for browser + Docker
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3000", // browser access
+      "http://client:3000",    // docker internal
+    ],
+    credentials: true,
+  })
+);
 
 // Middleware
-app.use(express.json()); 
+app.use(express.json());
 
-app.use('/api/users', userRoutes); 
-app.use('/api/post', postRoutes); 
+// Routes
+app.use("/api/users", userRoutes);
+app.use("/api/post", postRoutes);
 
-const PORT = process.env.PORT || 8080;
+// Server start
+const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`✅ Server running on port ${PORT}`);
 });
