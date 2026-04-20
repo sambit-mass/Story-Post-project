@@ -1,21 +1,20 @@
 name: Deploy to EC2
 
 on:
-workflow_dispatch:   # 👈 manual trigger
+workflow_dispatch:
 
 jobs:
 deploy:
 runs-on: ubuntu-latest
 
-```
 steps:
   - name: Deploy via SSH
     uses: appleboy/ssh-action@v1.0.3
     with:
-      host: \${{ secrets.EC2_HOST }}
-      username: \${{ secrets.EC2_USER }}
-      key: \${{ secrets.EC2_SSH_KEY }}
+      host: ${{ secrets.EC2_HOST }}
+      username: ${{ secrets.EC2_USER }}
+      key: ${{ secrets.EC2_SSH_KEY }}
       script: |
         cd ~/Story-Post-project
-        docker-compose up -d
-```
+        git pull origin main
+        docker-compose up -d --build
