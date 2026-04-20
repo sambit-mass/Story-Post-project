@@ -16,4 +16,4 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd ~/Story-Post-project
-            docker compose up -d
+            docker-compose up -d
